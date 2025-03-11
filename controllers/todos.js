@@ -1,6 +1,7 @@
 const todosRouter = require("express").Router();
 const Todo = require("../models/todo");
 const User = require("../models/user");
+const mongoose = require("mongoose");
 
 todosRouter.get("/", async (request, response) => {
 	const user = request.user;
@@ -28,16 +29,29 @@ todosRouter.post("/", async (request, response) => {
 
 todosRouter.delete("/:id", async (request, response) => {
 	const user = request.user;
-	// console.log(user);
+	const objectId = new mongoose.Types.ObjectId(request.params.id);
+	console.log("prueba", objectId.toString());
 
 	await Todo.findByIdAndDelete(request.params.id);
-	console.log("parametro", request.params.id);
+	// console.log("parametro", new ObjectId(request.params.id));
 
-	user.todos.map((todo) => console.log("map", String(todo)));
-	user.todos = user.todos.filter((todo) => todo.id !== request.params.id);
+	user.todos.map((todo) => console.log("map", todo.toString()));
+	user.todos = user.todos.filter(
+		(todo) => todo.toString() != objectId.toString()
+	);
 
 	await user.save();
 	// console.log(user.todos);
+
+	return response.sendStatus(200);
+});
+
+todosRouter.patch("/:id", async (request, response) => {
+	const user = request.user;
+
+	const {checked} = request.body;
+
+	await Todo.findByIdAndUpdate(request.params.id, {checked});
 
 	return response.sendStatus(200);
 });
