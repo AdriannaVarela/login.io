@@ -12,10 +12,14 @@ const incompletedCountSpan = document.querySelector(".incompleted-count");
 			withcredentials: true,
 		});
 
+		// estoy mostrando las tareas
 		data.forEach((todo) => {
+			// console.log("todo", todo);
 			const listItem = document.createElement("li");
 			listItem.classList.add("flex", "flex-row");
-			listItem.classList.add("flex", "flex-row");
+			listItem.setAttribute("id", todo.id);
+			console.log(listItem.getAttribute("id"));
+
 			listItem.innerHTML = `
 		<div class="group grow flex flex-row justify-between">
 			<button class="delete-icon w-12 md:w-14 hidden group-hover:flex group-hover:justify-center group-hover:items-center cursor-pointer bg-red-500 origin-left">
@@ -99,9 +103,13 @@ form.addEventListener("submit", async (e) => {
 	input.classList.add("focus:ring-2", "focus:ring-violet-600");
 	invalidCheck.classList.add("hidden");
 
+	//create list item
+	const {data} = await axios.post("/api/todos", {text: input.value});
+	console.log(data);
+
+	// estoy agregando la nueva tarea
 	// Create list item
 	const listItem = document.createElement("li");
-	listItem.id = data.id;
 	listItem.classList.add("flex", "flex-row");
 	listItem.innerHTML = `
 		<div class="group grow flex flex-row justify-between">
@@ -118,9 +126,6 @@ form.addEventListener("submit", async (e) => {
 			</svg>
 		</button>
 	`;
-	//create list item
-	const {data} = await axios.post("/api/todos", {text: input.value});
-	console.log(data);
 
 	// Append listItem
 	ul.append(listItem);
@@ -131,11 +136,13 @@ form.addEventListener("submit", async (e) => {
 	todoCount();
 });
 
-ul.addEventListener("click", (e) => {
+ul.addEventListener("click", async (e) => {
 	// Select delete-icon
 	if (e.target.closest(".delete-icon")) {
-		e.target.closest(".delete-icon").parentElement.parentElement.remove();
-		localStorage.setItem("todoList", ul.innerHTML);
+		const li = e.target.closest(".delete-icon").parentElement.parentElement;
+		// console.log(li);
+		await axios.delete(`/api/todos/${li.id}`);
+		li.remove();
 		todoCount();
 	}
 
