@@ -7,7 +7,6 @@ const totalCountSpan = document.querySelector(".total-count");
 const completedCountSpan = document.querySelector(".completed-count");
 const incompletedCountSpan = document.querySelector(".incompleted-count");
 
-
 const totalCount = () => {
 	const howMany = document.querySelector("ul").children.length;
 	totalCountSpan.innerHTML = howMany;
@@ -52,7 +51,7 @@ form.addEventListener("submit", async (e) => {
 
 	//create list item
 	const {data} = await axios.post("/api/todos", {text: input.value});
-	console.log(data);
+	// console.log(data);
 
 	// estoy agregando la nueva tarea
 	// Create list item

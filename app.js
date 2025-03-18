@@ -10,10 +10,12 @@ const usersRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 const todosRouter = require("./controllers/todos");
 const {userExtractor} = require("./middleware/auth");
+const logoutRouter = require("./controllers/logout");
+const {MONGO_URI} = require("./config");
 
 (async () => {
 	try {
-		await mongoose.connect(process.env.MONGO_URI_TEST);
+		await mongoose.connect(MONGO_URI);
 		console.log("Conectado correctamente");
 	} catch (error) {
 		console.log(error);
@@ -37,6 +39,7 @@ app.use("/verify/:id/:token", express.static(path.resolve("views", "verify")));
 //Rutas de backend
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/logout", logoutRouter);
 app.use("/api/todos", userExtractor, todosRouter);
 
 app.use(morgan("tiny"));

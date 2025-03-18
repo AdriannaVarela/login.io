@@ -69,6 +69,7 @@ form.addEventListener("submit", async (e) => {
 		};
 		// axios es la conexion  del front con el back y estamos enviando l info delusuario
 		const {data} = await axios.post("/api/users", newUser);
+		console.log(data);
 
 		createNotification(false, data);
 		setTimeout(() => {
@@ -91,6 +92,6 @@ form.addEventListener("submit", async (e) => {
 		setTimeout(() => {
 			notification.innerHTML = "";
 		}, 5000);
-		console.log(error.response.data.error);
+		// console.log(error.response.data.error);
 	}
 });
